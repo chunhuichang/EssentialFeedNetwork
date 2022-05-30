@@ -70,12 +70,17 @@ targets:
   EssentialFeed:
     type: application   
     platform: iOS
-    deploymentTarget:
-      iOS: 13.0    
-        
+    
     # sources 
     sources: 
       - path: EssentialFeed 
+
+    settings:
+      base:
+        CODE_SIGN_STYLE: Manual
+        INFOPLIST_FILE: EssentialFeed/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.jill.app.EssentialFeed
+        EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
 
   # -----------
   # EssentialFeedTests
@@ -94,3 +99,7 @@ targets:
     #   - target: UnitTestingLearining
     #   - package: Quick
     #   - package: Nimble
+    settings:
+      base:
+        CODE_SIGN_STYLE: Manual
+        EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
