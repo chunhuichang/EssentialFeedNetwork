@@ -1,0 +1,96 @@
+name: EssentialFeed
+
+############
+# Options
+############
+
+options:
+  bundleIdPrefix: com.jill.app
+  xcodeVersion: "13.2.1"
+  deploymentTarget:
+    iOS: 13.0
+
+############
+# Configs
+############
+
+# configs:
+#   Debug: debug
+#   Release: release
+#   Adhoc: release
+#   Beta: release    
+
+############
+# Packages
+############
+
+# packages:
+#   Quick:
+#     url: https://github.com/Quick/Quick.git
+#     majorVersion: 5.0.0
+
+#   Nimble:
+#     url: https://github.com/Quick/Nimble.git
+#     majorVersion: 10.0.0
+
+
+############
+# Schemes
+############
+
+schemes: 
+  EssentialFeed:
+    build:
+      targets:
+        EssentialFeed: all         
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets: 
+        - EssentialFeedTests      
+    profile: 
+      config: Debug 
+    analyze:
+      config: Debug
+    archive: 
+      config: Debug
+
+############
+# Targets
+############
+
+targets:
+
+  # -----------
+  # EssentialFeed
+  # -----------
+
+  EssentialFeed:
+    type: application   
+    platform: iOS
+    deploymentTarget:
+      iOS: 13.0    
+        
+    # sources 
+    sources: 
+      - path: EssentialFeed 
+
+  # -----------
+  # EssentialFeedTests
+  # -----------
+
+  EssentialFeedTests:
+    type: bundle.unit-test
+    platform: iOS
+
+    # sources
+    sources:
+      - EssentialFeedTests
+
+    # dependencies
+    # dependencies:
+    #   - target: UnitTestingLearining
+    #   - package: Quick
+    #   - package: Nimble
