@@ -95,8 +95,8 @@ targets:
       - EssentialFeedTests
 
     # dependencies
-    # dependencies:
-    #   - target: UnitTestingLearining
+    dependencies:
+      - target: EssentialFeed
     #   - package: Quick
     #   - package: Nimble
     settings:
