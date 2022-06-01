@@ -78,10 +78,15 @@ targets:
     settings:
       base:
         CODE_SIGN_STYLE: Manual
-        INFOPLIST_FILE: EssentialFeed/Info.plist
-        PRODUCT_BUNDLE_IDENTIFIER: com.jill.app.EssentialFeed
+        # INFOPLIST_FILE: EssentialFeed/Info.plist
+        # PRODUCT_BUNDLE_IDENTIFIER: com.jilßl.app.EssentialFeed
         EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
 
+    info:
+      path: EssentialFeed/Info.plist
+      properties:
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
   # -----------
   # EssentialFeedTests
   # -----------
