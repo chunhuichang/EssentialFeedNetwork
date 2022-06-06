@@ -48,8 +48,9 @@ schemes:
     test:
       config: Debug
       gatherCoverageData: true
-      targets: 
-        - EssentialFeedTests      
+      targets:  
+        - name: EssentialFeedTests 
+          randomExecutionOrder: true  
     profile: 
       config: Debug 
     analyze:
