@@ -59,7 +59,29 @@ schemes:
       config: Debug
     archive: 
       config: Debug
-
+      
+  CI:
+    build:
+      targets:
+        EssentialFeed: all         
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - EssentialFeed
+      targets:  
+        - name: EssentialFeedTests 
+          randomExecutionOrder: true  
+        - name: EssentialFeedAPIEndToEndTests 
+          randomExecutionOrder: true  
+    profile: 
+      config: Debug 
+    analyze:
+      config: Debug
+    archive: 
+      config: Debug
 ############
 # Targets
 ############
