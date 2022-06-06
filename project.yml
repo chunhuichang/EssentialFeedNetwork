@@ -118,6 +118,9 @@ targets:
     # sources
     sources:
       - EssentialFeedAPIEndToEndTests
+      - path: EssentialFeedTests
+        includes:
+          - "Feed API/Helpers"          
 
     # dependencies
     dependencies:
