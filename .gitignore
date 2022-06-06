@@ -81,7 +81,7 @@ xcuserdata
 !*.xcodeproj/xcshareddata/
 
 /*.gcno
-*.xcodeproj/xcshareddata/
+# *.xcodeproj/xcshareddata/
 *.xcodeproj/project.xcworkspace/xcshareddata
 *.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 *.xcodeproj/project.xcworkspace/contents.xcworkspacedata/xcshareddata/IDEWorkspaceChecks.plist
