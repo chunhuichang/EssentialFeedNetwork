@@ -86,6 +86,27 @@ targets:
         EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
 
   # -----------
+  # EssentialFeedAPIEndToEndTests
+  # -----------
+
+  EssentialFeedAPIEndToEndTests:
+    type: bundle.unit-test
+    platform: iOS
+
+    # sources
+    sources:
+      - EssentialFeedAPIEndToEndTests
+
+    # dependencies
+    dependencies:
+      - target: EssentialFeed
+    settings:
+      base:
+        CODE_SIGN_STYLE: Manual
+        INFOPLIST_FILE: EssentialFeedAPIEndToEndTests/Info.plist
+        EXCLUDED_ARCHS[sdk=iphonesimulator*]: arm64
+
+  # -----------
   # EssentialFeedTests
   # -----------
 
