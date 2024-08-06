@@ -5,8 +5,8 @@
 //  Created by Jill Chang on 2022/5/28.
 //
 
-import XCTest
 import EssentialFeed
+import XCTest
 
 class RemoteFeedLoaderTests: XCTestCase {
     func test_init() throws {
@@ -45,7 +45,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         let samples = [199, 201, 300, 400, 500]
-        samples.enumerated().forEach { index, code in
+        for (index, code) in samples.enumerated() {
             expect(sut, toCompleteWith: failure(.invalidData)) {
                 let json = makeItemsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
@@ -118,7 +118,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
     
     private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
-        return .failure(error)
+        .failure(error)
     }
     
     private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
@@ -143,7 +143,6 @@ class RemoteFeedLoaderTests: XCTestCase {
         return try! JSONSerialization.data(withJSONObject: json)
     }
 
-    
     private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectResult: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "wait for load completion")
         
@@ -169,7 +168,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
         
         var requestedURLs: [URL] {
-            return messages.map { $0.url }
+            messages.map(\.url)
         }
 
         func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {

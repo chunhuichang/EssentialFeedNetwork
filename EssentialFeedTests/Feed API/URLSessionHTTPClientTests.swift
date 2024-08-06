@@ -5,11 +5,10 @@
 //  Created by Jill Chang on 2022/6/5.
 //
 
-import XCTest
 import EssentialFeed
+import XCTest
 
 class URLSessionHTTPClientTests: XCTestCase {
-    
     override func setUp() {
         super.setUp()
         
@@ -86,6 +85,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     // MARK: - Helpers
+
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -125,7 +125,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         let receivedResult = resultFor(data: data, response: response, error: error, file: file, line: line)
         
         switch receivedResult {
-        case .failure(let error):
+        case let .failure(error):
             return error
         default:
             XCTFail("Expected failure, got \(receivedResult) instead", file: file, line: line)
@@ -134,23 +134,23 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private func anyURL() -> URL {
-        return URL(string: "http://any-url.com")!
+        URL(string: "http://any-url.com")!
     }
     
     private func anyData() -> Data {
-        return Data("any data".utf8)
+        Data("any data".utf8)
     }
     
     private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
+        NSError(domain: "any error", code: 0)
     }
     
     private func nonHTTPURLResponse() -> URLResponse {
-        return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+        URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }
     
     private func anyHTTPURLResponse() -> HTTPURLResponse {
-        return HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+        HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
     }
     
     private class URLProtocolStub: URLProtocol {
@@ -171,7 +171,6 @@ class URLSessionHTTPClientTests: XCTestCase {
             requestObserver = observer
         }
         
-        
         static func startInterceptingRequests() {
             URLProtocol.registerClass(URLProtocolStub.self)
         }
@@ -188,7 +187,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-            return request
+            request
         }
         
         override func startLoading() {
@@ -209,5 +208,4 @@ class URLSessionHTTPClientTests: XCTestCase {
         
         override func stopLoading() {}
     }
-    
 }
