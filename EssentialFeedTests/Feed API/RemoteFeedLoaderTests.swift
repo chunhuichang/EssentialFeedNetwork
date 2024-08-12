@@ -158,7 +158,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     }
 
     private actor HTTPClientSpy: HTTPClient {
-        private var results: [URL: [HTTPClientResult]] = [:]
+        private var results: [URL: [HTTPClient.HTTPResult]] = [:]
         
         var requestedURLs: [URL] {
             results.flatMap { url, history in
@@ -170,8 +170,8 @@ class RemoteFeedLoaderTests: XCTestCase {
             case invalidData
         }
         
-        func get(from url: URL) async -> HTTPClientResult {
-            let currentResult: HTTPClientResult = results[url]?.last ?? .failure(HTTPClientSpyError.invalidData)
+        func get(from url: URL) async -> HTTPClient.HTTPResult {
+            let currentResult: HTTPClient.HTTPResult = results[url]?.last ?? .failure(HTTPClientSpyError.invalidData)
 
             results[url, default: []].append(currentResult)
             return currentResult
@@ -183,7 +183,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         
         func call(from url: URL = makeURL(), withStatusCode code: Int, data: Data) {
             let response = HTTPURLResponse(url: url, statusCode: code, httpVersion: nil, headerFields: nil)!
-            results[url, default: []].append(.success(data, response))
+            results[url, default: []].append(.success((data, response)))
         }
     }
 }
