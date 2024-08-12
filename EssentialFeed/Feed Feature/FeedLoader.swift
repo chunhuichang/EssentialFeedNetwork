@@ -13,5 +13,5 @@ public enum LoadFeedResult {
 }
 
 public protocol FeedLoader {
-    func load() async throws -> LoadFeedResult
+    func load() async -> LoadFeedResult
 }
