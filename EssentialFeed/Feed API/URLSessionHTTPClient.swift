@@ -7,20 +7,32 @@
 
 import Foundation
 
-public class URLSessionHTTPClient: HTTPClient {
-    private let session: URLSession
+public protocol URLSessionProtocol {
+    func data(from url: URL) async throws -> (Data, URLResponse)
+}
 
-    public init(session: URLSession = .shared) {
+extension URLSession: URLSessionProtocol {}
+
+public class URLSessionHTTPClient: HTTPClient {
+    private let session: URLSessionProtocol
+
+    public init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session
     }
 
     private struct UnexpectedValuesRepresentation: Error {}
 
-    public func get(from url: URL) async throws -> HTTPClientResult {
-        let (data, response) = try await session.data(from: url)
-        guard let response = response as? HTTPURLResponse else {
-            return .failure(UnexpectedValuesRepresentation())
+    public func get(from url: URL) async -> HTTPResult {
+        do {
+            let (data, response) = try await session.data(from: url)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return .failure(UnexpectedValuesRepresentation())
+            }
+
+            return .success((data, httpResponse))
+        } catch {
+            return .failure(error)
         }
-        return .success(data, response)
     }
 }
