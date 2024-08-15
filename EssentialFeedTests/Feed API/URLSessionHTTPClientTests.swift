@@ -6,18 +6,22 @@
 //
 
 import EssentialFeed
-import XCTest
+import Foundation
+import Testing
 
-class URLSessionHTTPClientTests: XCTestCase {
-    func test_getFromURL_failsOnRequestError() async {
+@Suite("URLSessionHTTPClient Tests")
+struct URLSessionHTTPClientTests {
+    @Test
+    func getFromURL_failsOnRequestError() async {
         let requestError = anyNSError()
         let receivedError = await resultErrorFor((data: nil, response: nil, error: requestError)) as NSError?
 
-        XCTAssertEqual(receivedError?.domain, requestError.domain)
-        XCTAssertEqual(receivedError?.code, requestError.code)
+        #expect(receivedError?.domain == requestError.domain)
+        #expect(receivedError?.code == requestError.code)
     }
 
-    func test_getFromURL_failsOnAllInvalidRepresentationCases() async {
+    @Test
+    func getFromURL_failsOnAllInvalidRepresentationCases() async {
         await expectErrorAssertNotNil(resultErrorFor((data: nil, response: nil, error: nil)))
         await expectErrorAssertNotNil(resultErrorFor((data: nil, response: nonHTTPURLResponse(), error: nil)))
         await expectErrorAssertNotNil(resultErrorFor((data: anyData(), response: nil, error: nil)))
@@ -29,7 +33,8 @@ class URLSessionHTTPClientTests: XCTestCase {
         await expectErrorAssertNotNil(resultErrorFor((data: anyData(), response: nonHTTPURLResponse(), error: nil)))
     }
 
-    func test_getFromURL_succeedsOnHTTPURLResponseWithData() async {
+    @Test
+    func getFromURL_succeedsOnHTTPURLResponseWithData() async {
         // Given
         let data = anyData()
         let response = anyHTTPURLResponse()
@@ -38,12 +43,13 @@ class URLSessionHTTPClientTests: XCTestCase {
         let receivedValues = await resultValuesFor((data: data, response: response, error: nil))
 
         // Then
-        XCTAssertEqual(receivedValues?.data, data)
-        XCTAssertEqual(receivedValues?.response.url, response.url)
-        XCTAssertEqual(response.statusCode, response.statusCode)
+        #expect(receivedValues?.data == data)
+        #expect(receivedValues?.response.url == response.url)
+        #expect(response.statusCode == response.statusCode)
     }
 
-    func test_getFromURL_succeedsWithEmptyDataOnHTTPURLResponseWithNilData() async {
+    @Test
+    func getFromURL_succeedsWithEmptyDataOnHTTPURLResponseWithNilData() async {
         // Given
         let response = anyHTTPURLResponse()
         let emptyData = Data()
@@ -52,9 +58,9 @@ class URLSessionHTTPClientTests: XCTestCase {
         let receivedValues = await resultValuesFor((data: emptyData, response: response, error: nil))
 
         // Then
-        XCTAssertEqual(receivedValues?.data, emptyData)
-        XCTAssertEqual(receivedValues?.response.url, response.url)
-        XCTAssertEqual(response.statusCode, response.statusCode)
+        #expect(receivedValues?.data == emptyData)
+        #expect(receivedValues?.response.url == response.url)
+        #expect(response.statusCode == response.statusCode)
     }
 }
 
@@ -63,7 +69,6 @@ class URLSessionHTTPClientTests: XCTestCase {
 private extension URLSessionHTTPClientTests {
     func makeSUT(_ values: (data: Data?, response: URLResponse?, error: Error?)?, file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient(session: URLSessionMock(values))
-        trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 
@@ -78,7 +83,7 @@ private extension URLSessionHTTPClientTests {
         case let .success(values):
             return values
         default:
-            XCTFail("Expected success, got \(receivedResult) instead", file: file, line: line)
+            Issue.record("Expected success, got \(receivedResult) instead")
             return nil
         }
     }
@@ -90,13 +95,13 @@ private extension URLSessionHTTPClientTests {
         case let .failure(error):
             return error
         default:
-            XCTFail("Expected failure, got \(result) instead")
+            Issue.record("Expected failure, got \(result) instead")
             return nil
         }
     }
 
     func expectErrorAssertNotNil(_ error: Error?) {
-        XCTAssertNotNil(error)
+        #expect(error != nil)
     }
 
     func anyURL() -> URL {

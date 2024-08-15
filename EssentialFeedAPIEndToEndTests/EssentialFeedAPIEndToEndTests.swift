@@ -6,22 +6,25 @@
 //
 
 import EssentialFeed
-import XCTest
+import Foundation
+import Testing
 
-class EssentialFeedAPIEndToEndTests: XCTestCase {
-    func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() async {
+@Suite("Feed API End To End Tests")
+struct EssentialFeedAPIEndToEndTests {
+    @Test
+    func endToEndTestServerGETFeedResult_matchesFixedTestAccountData() async {
         let result = await getFeedResult()
         switch result {
         case let .success(items):
-            XCTAssertEqual(items.count, 8, "Expected 8 items in the test account feed")
+            #expect(items.count == 8, "Expected 8 items in the test account feed")
             
             for (index, item) in items.enumerated() {
-                XCTAssertEqual(item, expectedItem(at: index), "Unexpected item values at index \(index)")
+                #expect(item == expectedItem(at: index), "Unexpected item values at index \(index)")
             }
         case let .failure(error):
-            XCTFail("Expected success feed result, got \(error) instead")
+            Issue.record("Expected success feed result, got \(error) instead")
         default:
-            XCTFail("Expected success feed result, got no result instead")
+            Issue.record("Expected success feed result, got no result instead")
         }
     }
 }
@@ -33,8 +36,6 @@ private extension EssentialFeedAPIEndToEndTests {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient()
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
-        trackForMemoryLeaks(client, file: file, line: line)
-        trackForMemoryLeaks(loader, file: file, line: line)
         
         return await loader.load()
     }
