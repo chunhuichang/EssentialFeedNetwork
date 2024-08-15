@@ -5,64 +5,51 @@
 //  Created by Jill Chang on 2022/6/6.
 //
 
-import XCTest
 import EssentialFeed
+import Foundation
+import Testing
 
-class EssentialFeedAPIEndToEndTests: XCTestCase {
-    func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
-        switch getFeedResult() {
+@Suite("Feed API End To End Tests")
+struct EssentialFeedAPIEndToEndTests {
+    @Test
+    func endToEndTestServerGETFeedResult_matchesFixedTestAccountData() async {
+        let result = await getFeedResult()
+        switch result {
         case let .success(items):
-            XCTAssertEqual(items.count, 8, "Expected 8 items in the test account feed")
+            #expect(items.count == 8, "Expected 8 items in the test account feed")
             
-//            items.enumerated().forEach { index, item in
-//                XCTAssertEqual(item, expectedItem(at: index), "Unexpected item values at index \(index)")
-//            }
-            
-            XCTAssertEqual(items[0], expectedItem(at: 0))
-            XCTAssertEqual(items[1], expectedItem(at: 1))
-            XCTAssertEqual(items[2], expectedItem(at: 2))
-            XCTAssertEqual(items[3], expectedItem(at: 3))
-            XCTAssertEqual(items[4], expectedItem(at: 4))
-            XCTAssertEqual(items[5], expectedItem(at: 5))
-            XCTAssertEqual(items[6], expectedItem(at: 6))
-            XCTAssertEqual(items[7], expectedItem(at: 7))
+            for (index, item) in items.enumerated() {
+                #expect(item == expectedItem(at: index), "Unexpected item values at index \(index)")
+            }
         case let .failure(error):
-            XCTFail("Expected success feed result, got \(error) instead")
+            Issue.record("Expected success feed result, got \(error) instead")
         default:
-            XCTFail("Expected success feed result, got no result instead")
+            Issue.record("Expected success feed result, got no result instead")
         }
     }
-    
-    // MARK: - Helpers
-    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
+}
+
+// MARK: - Helpers
+
+private extension EssentialFeedAPIEndToEndTests {
+    func getFeedResult(file: StaticString = #filePath, line: UInt = #line) async -> FeedLoader.LoadFeedResult? {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient()
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
-        trackForMemoryLeaks(client, file: file, line: line)
-        trackForMemoryLeaks(loader, file: file, line: line)
         
-        let exp = expectation(description: "Wait for load completion")
-        
-        var receivedResult: LoadFeedResult?
-        loader.load { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 5.0)
-        
-        return receivedResult
+        return await loader.load()
     }
     
-    private func expectedItem(at index: Int) -> FeedItem {
-        return FeedItem(
+    func expectedItem(at index: Int) -> FeedItem {
+        FeedItem(
             id: id(at: index),
             description: description(at: index),
             location: location(at: index),
             imageURL: imageURL(at: index))
     }
     
-    private func id(at index: Int) -> UUID {
-        return UUID(uuidString: [
+    func id(at index: Int) -> UUID {
+        UUID(uuidString: [
             "73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6",
             "BA298A85-6275-48D3-8315-9C8F7C1CD109",
             "5A0D45B3-8E26-4385-8C5D-213E160A5E3C",
@@ -74,8 +61,8 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         ][index])!
     }
     
-    private func description(at index: Int) -> String? {
-        return [
+    func description(at index: Int) -> String? {
+        [
             "Description 1",
             nil,
             "Description 3",
@@ -87,8 +74,8 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         ][index]
     }
     
-    private func location(at index: Int) -> String? {
-        return [
+    func location(at index: Int) -> String? {
+        [
             "Location 1",
             "Location 2",
             nil,
@@ -100,7 +87,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         ][index]
     }
     
-    private func imageURL(at index: Int) -> URL {
-        return URL(string: "https://url-\(index+1).com")!
+    func imageURL(at index: Int) -> URL {
+        URL(string: "https://url-\(index + 1).com")!
     }
 }
